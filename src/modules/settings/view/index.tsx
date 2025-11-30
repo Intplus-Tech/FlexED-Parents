@@ -58,7 +58,7 @@ export default function SettingsView() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-semibold text-gray-900 mb-12">Settings</h1>

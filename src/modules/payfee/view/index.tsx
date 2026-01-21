@@ -35,7 +35,6 @@ export default function PayFeesView() {
         <h1 className="text-3xl font-bold text-gray-900">Payment Summary</h1>
       </div>
 
-      {/* Payment Summary Cards */}
       <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-6 gap-4 mb-6">
           <div className="flex items-center justify-center text-center">

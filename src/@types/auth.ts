@@ -24,6 +24,7 @@ export interface CreateSchoolRequest {
   schoolType: "Public" | "Private";
   password: string;
 }
+
 export interface CreateSchoolResponse {
   message: string;
 }
@@ -36,6 +37,7 @@ export interface VerifyAccountRequest {
 export interface ForgotPasswordRequest {
   email: string;
 }
+
 export interface ForgotPasswordResponse {
   success: boolean;
   message: string;
@@ -52,4 +54,37 @@ export interface ResetPasswordRequest {
 
 export interface ResendOTPRequest {
   email: string;
+}
+
+export interface RegisterParentResponse {
+  success: boolean;
+  message: string;
+  data: RegisterParentData;
+  statusCode: number;
+}
+
+export interface RegisterParentData {
+  token: string;
+  parent: Parent;
+}
+
+export interface Parent {
+  _id: string;
+  email: string;
+  school: string;
+  __v: number;
+  address: string;
+  authUserId: string;
+  children: string[];
+  createdAt: string;
+  updatedAt: string;
+  firstName: string;
+  lastName: string;
+  gender: "MALE" | "FEMALE" | string;
+  inviteTokenHash: string | null;
+  isRegistered: boolean;
+  occupation: string;
+  phone: string;
+  relationship: "PARENT" | string;
+  title: string;
 }

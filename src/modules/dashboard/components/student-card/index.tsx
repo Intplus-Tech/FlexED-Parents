@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
 import { StudentCardsSkeleton } from "../skeleton-loader/skeleton-loader";
-import { Student } from "@/@types/dashboard";
+import { StudentDashboard } from "@/@types/parents";
+import Image from "next/image";
 
 interface StudentCardsProps {
-  students: Student[];
-  onPayNow: (student: Student) => void;
+  students: StudentDashboard[];
+  onPayNow: (student: StudentDashboard) => void;
   isLoading: boolean;
 }
 
@@ -36,16 +36,20 @@ export default function StudentCards({
         >
           {/* Student Info */}
           <div className="flex items-center gap-4 mb-6">
-            <img
-              src={student.avatar || "/placeholder.svg"}
-              alt={student.name}
+            <Image
+              src={"/placeholder.svg"}
+              alt={student.firstName}
+              width={64}
+              height={64}
               className="w-16 h-16 rounded-full object-cover"
             />
             <div>
               <h3 className="font-semibold text-gray-900 underline text-lg">
-                {student.name}
+                {student.firstName} {student.lastName}
               </h3>
-              <p className="text-gray-600 text-sm">{student.class}</p>
+              <p className="text-gray-600 text-sm">
+                {student.class?.name || "Not Assigned"}
+              </p>
             </div>
           </div>
 
@@ -55,13 +59,13 @@ export default function StudentCards({
               <div>
                 <p className="text-gray-600 text-sm font-medium">Term Fee</p>
                 <p className="text-xl font-bold text-gray-900">
-                  {formatCurrency(student.termFee)}
+                  {formatCurrency(student.totalOutstanding ?? 0)}
                 </p>
               </div>
               <div>
                 <p className="text-gray-600 text-sm font-medium">Amount Paid</p>
                 <p className="text-xl font-bold text-gray-900">
-                  {formatCurrency(student.amountPaid)}
+                  {formatCurrency(0)}
                 </p>
               </div>
             </div>
@@ -72,7 +76,7 @@ export default function StudentCards({
             onClick={() => onPayNow(student)}
             className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors mb-3"
           >
-            Pay Now ({formatCurrency(student.balanceDue)})
+            Pay Now ({formatCurrency(student.totalOutstanding ?? 0)})
           </button>
 
           {/* View Details Link */}

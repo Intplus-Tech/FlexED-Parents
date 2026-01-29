@@ -11,12 +11,14 @@ export const auth = {
 export const parent = {
   parentRegister: "parents/register",
   parentInvite: "parents/invite",
-  parentInviteDetails: "parents/invite-details",
-  parentChildren: "parents/children",
+  parentInviteDetails: "/parents/invite/details",
+  parentChildren: "/parents/me/children",
+  parentDashbaord: "/parents/me/dashboard",
+  parentTransaction: "/parents/me/transactions",
 };
 
 export const ApiEndpoints = {
-  baseUrl: process.env.NEXT_PUBLIC_API_BASE_UR!,
+  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL!,
   auth,
   parent,
 };

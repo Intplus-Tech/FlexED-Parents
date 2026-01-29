@@ -1,9 +1,10 @@
 import React from "react";
 import { PaymentTableSkeleton } from "../skeleton-loader/skeleton-loader";
 import { Payment } from "@/@types/dashboard";
+import { TransactionRow } from "@/@types/parents";
 
 interface PaymentTableProps {
-  payments: Payment[];
+  payments: TransactionRow[];
   isLoading: boolean;
 }
 
@@ -35,27 +36,12 @@ export default function PaymentTable({
                 <th className="px-6 py-4 text-left">
                   <input type="checkbox" className="w-5 h-5 cursor-pointer" />
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Time / Date
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Transaction ID
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Student Name
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Class
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Amount Paid
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  % Remaining
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                  Status
-                </th>
+            
+                {["Time/Date", "Transaction ID", "Student Name","Class", "Amount Paid", "% Remaining", "Status"]?.map((header) => (
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 white-space-nowrap">
+                   { header}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -71,7 +57,7 @@ export default function PaymentTable({
               ) : (
                 payments.map((payment) => (
                   <tr
-                    key={payment.id}
+                    key={payment?.paymentItemId}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                   >
                     <td className="px-6 py-4">
@@ -81,34 +67,33 @@ export default function PaymentTable({
                       />
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                      {payment.time}
+                      {payment?.time}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700">
-                      {payment.transactionId}
+                      {payment?.transactionId}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                      {payment.studentName}
+                      {payment?.studentName}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700">
-                      {payment.class}
+                      {payment?.className}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700 font-medium">
                       {formatCurrency(payment.amountPaid)}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700">
-                      {payment.percentageRemaining}%
+                      {payment?.percentRemaining}%
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span
-                        className={`inline-block px-3 py-1 rounded-full font-medium ${
-                          payment.status === "Successful"
+                        className={`inline-block px-3 py-1 rounded-full font-medium ${payment?.status === "Successful"
                             ? "bg-green-100 text-green-800"
-                            : payment.status === "Failed"
+                            : payment?.status === "Failed"
                               ? "bg-red-100 text-red-800"
                               : "bg-yellow-100 text-yellow-800"
-                        }`}
+                          }`}
                       >
-                        {payment.status}
+                        {payment?.status}
                       </span>
                     </td>
                   </tr>

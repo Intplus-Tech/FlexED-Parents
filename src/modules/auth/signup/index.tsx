@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -14,15 +14,28 @@ import {
   MailIcon,
 } from "@/icons";
 import { SignupFormData, signupSchema } from "@/lib/validation";
-import { mockStudents } from "@/lib/mock-data";
+import { useGetParentDetailsQuery } from "@/redux/api/parents";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useParentRegisterMutation } from "@/redux/api/auth";
 
 export default function SignupView() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const token = searchParams.get("token");
+  const {
+    data: parentDetails,
+    isFetching: isFetchingParentDetails,
+    isLoading: isLoadingParentDetails,
+  } = useGetParentDetailsQuery({ token: String(token) }, { skip: !token });
+
+  const [parentRegister, { isLoading }] = useParentRegisterMutation();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
     watch,
   } = useForm<SignupFormData>({
@@ -33,8 +46,28 @@ export default function SignupView() {
   const agreeToPrivacy = watch("agreeToPrivacy");
   const confirmParent = watch("confirmParentGuardian");
 
-  const onSubmit = (data: SignupFormData) => {
-    console.log("[v0] Signup data:", data);
+  useEffect(() => {
+    if (parentDetails?.data?.parent?.firstName) {
+      reset({
+        email: parentDetails?.data?.parent?.email,
+      });
+    }
+  }, [parentDetails, reset]);
+
+  const onSubmit = async (data: SignupFormData) => {
+    try {
+      const res = await parentRegister({
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        schoolId: String(parentDetails?.data?.school?._id),
+      }).unwrap();
+      localStorage.setItem("parentToken", res.data.token);
+      router.push("/dashboard");
+      console.log("Parent registered successfully:", res);
+    } catch (error) {
+      console.error("Error registering parent:", error);
+    }
   };
 
   return (
@@ -46,17 +79,19 @@ export default function SignupView() {
             <Logo />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-2 max-w-[400px] mx-auto">
-            Welcome Mr Adebayou johnson
+            Welcome Mr {parentDetails?.data?.parent?.firstName}{" "}
+            {parentDetails?.data?.parent?.lastName}
           </h2>
           <p className="text-gray-600 text-center">
             You are managing Fees For:{" "}
             <span className="block mt-2">
-              {mockStudents.map((student) => (
+              {parentDetails?.data?.children.map((child) => (
                 <span
-                  key={student.id}
+                  key={child.id}
                   className="text-purple-600 font-semibold block"
                 >
-                  {student.name} - {student.class}
+                  {`${child?.firstName} ${child?.lastName}`} -{" "}
+                  {child?.class?.name ?? "Not Assigned"}
                 </span>
               ))}
             </span>
@@ -69,7 +104,6 @@ export default function SignupView() {
             className="space-y-6 max-w-md mx-auto"
           >
             <h1 className="font-medium text-2xl py-2">Create your account</h1>
-            {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email address
@@ -97,7 +131,6 @@ export default function SignupView() {
                 Secure Your Access
               </h3>
 
-              {/* Create Password */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Create Password
@@ -131,7 +164,6 @@ export default function SignupView() {
                 )}
               </div>
 
-              {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Confirm Password
@@ -168,7 +200,6 @@ export default function SignupView() {
               </div>
             </div>
 
-            {/* Agreements */}
             <div className=" pt-6 space-y-4">
               <label className="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
                 <input
@@ -230,16 +261,14 @@ export default function SignupView() {
               )}
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
             >
-              Create My Account
+              {isLoading ? "Creating Account..." : "Create My Account"}
             </button>
           </form>
 
-          {/* Login Link */}
           <p className="text-center text-gray-700 mt-6">
             Already have an account?{" "}
             <Link

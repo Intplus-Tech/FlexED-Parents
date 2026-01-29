@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import Link from "next/link";
 import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import {
   HomeIcon,
   LogoutIcon,
@@ -25,11 +26,17 @@ export default function PortalSidebar({ onClose }: PortalSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
+  const { data: session } = useSession();
 
   const handleLogout = () => {
-    console.log("[v0] Logout clicked");
-    router.push("/login");
+    void signOut({ callbackUrl: "/auth/login" });
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = (session as any)?.user;
+  const displayName =
+    user?.name ?? user?.fullName ?? user?.firstName ?? "Account";
+  const displayEmail = user?.email ?? "";
 
   return (
     <div className="h-full bg-white border-r border-gray-200 flex flex-col overflow-y-auto">
@@ -97,11 +104,11 @@ export default function PortalSidebar({ onClose }: PortalSidebarProps) {
             />
             <div className="text-left min-w-0 flex-1">
               <p className="text-sm font-semibold text-gray-900 truncate">
-                Amara Bling
+                {displayName}
               </p>
-              <p className="text-xs text-gray-500 truncate">
-                amarablings@gmail.com
-              </p>
+              {displayEmail ? (
+                <p className="text-xs text-gray-500 truncate">{displayEmail}</p>
+              ) : null}
             </div>
             <MoreIcon className="w-5 h-5 text-gray-400 shrink-0" />
           </button>

@@ -7,12 +7,14 @@ import type {
 } from "@reduxjs/toolkit/query";
 import { RootState } from "./store";
 import { signOut } from "next-auth/react";
-import { ApiEndpoints } from "@/utils/endpoints/inde";
+import { ApiEndpoints } from "@/utils/endpoints";
+import { showerror } from "@/utils/toast";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: ApiEndpoints.baseUrl,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).authState.accessToken;
+    // const token = localStorage.getItem("parentToken");
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
@@ -32,8 +34,9 @@ const baseQueryWithAuthRedirect: BaseQueryFn<
     (result.error.status === 401 || result.error.status === 403)
   ) {
     if (typeof window !== "undefined") {
+      showerror("Session expired, please login again")
       signOut();
-      window.location.href = "/auth/sign-in";
+      window.location.href = "/auth/login";
     }
   }
 

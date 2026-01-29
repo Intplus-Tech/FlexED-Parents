@@ -2,61 +2,16 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { CloseIcon, MenuIcon } from "@/icons";
 import PortalSidebar from "@/components/sidebar";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { SignInResponse } from "@/@types/auth";
-import { setAuth } from "@/redux/slice/auth";
 
-export default function PortalLayout({
+export default function PortalLayoutClient({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const { status ,data} = useSession();
-  const dispatch = useDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { currentUser } = useSelector((state: RootState) => state.authState);
- console.log(status, "status");
-
-
- useEffect(() => {
-  if (status === "authenticated" && data) {
-    const Data = data as unknown as {
-      accessToken: string;
-      refreshToken: string;
-      user: SignInResponse["data"]["user"];
-    };
-    dispatch(
-      setAuth({
-        accessToken: Data.accessToken,
-        currentUser: Data.user,
-      })
-    );
-  }
-}, [status, data, dispatch]);
-
-  useEffect(() => {
-    if (status === "unauthenticated" && !currentUser) {
-      router.replace("/auth/login");
-    }
-  }, [router, status, currentUser]);
-
-  if (status === "loading" || !currentUser) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center">
-        <div className="flex items-center gap-3 text-gray-700">
-          <div className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-gray-900 animate-spin" />
-          <span className="text-sm">Loading…</span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex h-screen">
@@ -80,6 +35,7 @@ export default function PortalLayout({
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-gray-600 hover:text-gray-900"
+            aria-label="Open menu"
           >
             <MenuIcon className="w-6 h-6" />
           </button>
@@ -91,6 +47,7 @@ export default function PortalLayout({
           <button
             onClick={() => setSidebarOpen(false)}
             className="text-gray-600 hover:text-gray-900 lg:hidden"
+            aria-label="Close menu"
           >
             <CloseIcon className="w-6 h-6" />
           </button>
@@ -103,3 +60,4 @@ export default function PortalLayout({
     </div>
   );
 }
+

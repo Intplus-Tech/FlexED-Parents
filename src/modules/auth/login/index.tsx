@@ -9,9 +9,16 @@ import Link from "next/link";
 import { LoginFormData, loginSchema } from "@/lib/validation";
 import { EyeIcon, EyeOffIcon, LockIcon, Logo, MailIcon } from "@/icons";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { getSession, signIn } from "next-auth/react";
+import { showerror, showsuccess } from "@/utils/toast";
+import { setAuth } from "@/redux/slice/auth";
+import { SignInResponse } from "@/@types/auth";
 
 export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const router = useRouter();
   const {
     register,
@@ -21,9 +28,33 @@ export default function LoginView() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    router.push("/dashboard");
-    console.log("[v0] Login data:", data);
+  const onSubmit = async (data: LoginFormData) => {
+    if (data.email && data.password) {
+      setIsLoading(true);
+      const res = await signIn("credentials", {
+        email: data.email.trim(),
+        password: data.password.trim(),
+        redirect: false,
+      });
+
+      if (res?.ok) {
+        const newSession = await getSession();
+        showsuccess("Success");
+        const Data = newSession as unknown as {
+          accessToken: string;
+          user: SignInResponse["data"]["user"];
+        };
+
+        dispatch(
+          setAuth({
+            accessToken: Data.accessToken,
+            currentUser: Data.user,
+          })
+        );
+        router.push("/dashboard");
+      } else showerror(res?.error ?? "Something went wrong");
+      setIsLoading(false);
+    }
   };
 
   return (

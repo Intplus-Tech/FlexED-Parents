@@ -1,11 +1,12 @@
 "use client";
 
-import { Student } from "@/@types/dashboard";
-import React, { useState } from "react";
+import { StudentDashboard } from "@/@types/parents";
+import Image from "next/image";
+import { useState } from "react";
 
 interface PaymentModalProps {
   isOpen: boolean;
-  student: Student | null;
+  student: StudentDashboard | null;
   onClose: () => void;
 }
 
@@ -27,9 +28,12 @@ export default function PaymentModal({
   };
 
   const feeBreakdown = [
-    { description: "Tuition Fee", amount: student.balanceDue * 0.6 },
-    { description: "Administrative Fee", amount: student.balanceDue * 0.25 },
-    { description: "Exam Fee", amount: student.balanceDue * 0.15 },
+    { description: "Tuition Fee", amount: student.totalOutstanding * 0.6 },
+    {
+      description: "Administrative Fee",
+      amount: student.totalOutstanding * 0.25,
+    },
+    { description: "Exam Fee", amount: student.totalOutstanding * 0.15 },
   ];
 
   const handlePayment = async () => {
@@ -37,7 +41,7 @@ export default function PaymentModal({
     // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
-      alert(`Payment processed successfully for ${student.name}`);
+      // alert(`Payment processed successfully for ${student.name}`);
       onClose();
     }, 2000);
   };
@@ -57,7 +61,9 @@ export default function PaymentModal({
           <div className="sticky top-0 bg-linear-to-r from-purple-600 to-purple-500 text-white p-6 flex items-center justify-between border-b border-purple-400">
             <div>
               <h2 className="text-xl font-bold">Payment Details</h2>
-              <p className="text-purple-100 text-sm">{student.name}</p>
+              <p className="text-purple-100 text-sm">
+                {student.firstName} {student.lastName}
+              </p>
             </div>
             <button
               onClick={onClose}
@@ -72,14 +78,20 @@ export default function PaymentModal({
           <div className="p-6 space-y-6">
             {/* Student Info */}
             <div className="flex items-center gap-4 pb-4 border-b border-gray-100">
-              <img
-                src={student.avatar || "/placeholder.svg"}
-                alt={student.name}
+              <Image
+                src={"/placeholder.svg"}
+                alt={student.firstName}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full object-cover"
               />
               <div>
-                <p className="font-semibold text-gray-900">{student.name}</p>
-                <p className="text-sm text-gray-600">{student.class}</p>
+                <p className="font-semibold text-gray-900">
+                  {student?.firstName} {student?.lastName}
+                </p>
+                <p className="text-sm text-gray-600">
+                  {student.class?.name || "Not Assigned"}
+                </p>
               </div>
             </div>
 
@@ -88,19 +100,19 @@ export default function PaymentModal({
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Term Fee</span>
                 <span className="font-semibold text-gray-900">
-                  {formatCurrency(student.termFee)}
+                  {formatCurrency(student.totalOutstanding)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Amount Paid</span>
                 <span className="font-semibold text-gray-900">
-                  {formatCurrency(student.amountPaid)}
+                  {formatCurrency(0)}
                 </span>
               </div>
               <div className="border-t border-purple-200 pt-3 flex justify-between">
                 <span className="font-semibold text-gray-900">Balance Due</span>
                 <span className="font-bold text-red-500 text-lg">
-                  {formatCurrency(student.balanceDue)}
+                  {formatCurrency(0)}
                 </span>
               </div>
             </div>
@@ -182,7 +194,7 @@ export default function PaymentModal({
                   Processing...
                 </>
               ) : (
-                `Pay ${formatCurrency(student.balanceDue)}`
+                `Pay ${formatCurrency(student.totalOutstanding)}`
               )}
             </button>
             <button

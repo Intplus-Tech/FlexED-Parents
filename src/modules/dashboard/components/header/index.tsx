@@ -4,14 +4,14 @@ import { HeaderSkeleton } from "../skeleton-loader/skeleton-loader";
 interface HeaderProps {
   studentCount: number;
   totalOutstanding: number;
-  currentTermStatus: number;
+  // currentTermStatus: number;
   isLoading: boolean;
 }
 
 export default function Header({
   studentCount,
   totalOutstanding,
-  currentTermStatus,
+  // currentTermStatus,
   isLoading,
 }: HeaderProps) {
   const formatCurrency = (value: number) => {
@@ -22,8 +22,8 @@ export default function Header({
     }).format(value);
   };
 
-  const percentagePaid =
-    studentCount > 0 ? Math.round((currentTermStatus / studentCount) * 100) : 0;
+  // const percentagePaid =
+  //   studentCount > 0 ? Math.round((currentTermStatus / studentCount) * 100) : 0;
 
   if (isLoading) {
     return <HeaderSkeleton />;
@@ -81,7 +81,8 @@ export default function Header({
                   Current Term Fee Status
                 </p>
                 <p className="text-3xl font-bold text-green-600 mt-2">
-                  ₦0 <span className="text-xl">({percentagePaid}%)</span>
+                  ₦0 
+                  {/* <span className="text-xl">({percentagePaid}%)</span> */}
                 </p>
                 <button className="mt-4 bg-gray-400 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-500 transition-colors cursor-not-allowed opacity-70">
                   Pay Now

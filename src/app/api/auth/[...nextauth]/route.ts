@@ -1,6 +1,6 @@
 /*eslint-disable @typescript-eslint/no-explicit-any */
 import { SignInResponse } from "@/@types/auth";
-import { ApiEndpoints } from "@/utils/endpoints/inde";
+import { ApiEndpoints } from "@/utils/endpoints";
 // import { ApiEndpoints } from "@/utils/endpoints";
 
 import NextAuth from "next-auth";

@@ -15,6 +15,7 @@ export const parent = {
   parentChildren: "/parents/me/children",
   parentDashbaord: "/parents/me/dashboard",
   parentTransaction: "/parents/me/transactions",
+  makepayment: "/payments/initiate-student-dva",
 };
 
 export const ApiEndpoints = {

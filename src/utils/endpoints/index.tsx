@@ -16,6 +16,8 @@ export const parent = {
   parentDashbaord: "/parents/me/dashboard",
   parentTransaction: "/parents/me/transactions",
   makepayment: "/payments/initiate-student-dva",
+  transactionStatus: (reference: string) =>
+    `/payments/transactions/${reference}/status`,
 };
 
 export const ApiEndpoints = {

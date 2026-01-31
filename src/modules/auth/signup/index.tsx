@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -18,7 +18,7 @@ import { useGetParentDetailsQuery } from "@/redux/api/parents";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useParentRegisterMutation } from "@/redux/api/auth";
 
-export default function SignupView() {
+function SignupView() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const searchParams = useSearchParams();
@@ -281,5 +281,15 @@ export default function SignupView() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <>
+      <Suspense>
+        <SignupView />
+      </Suspense>
+    </>
   );
 }

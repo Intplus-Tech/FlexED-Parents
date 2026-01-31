@@ -69,14 +69,57 @@ export const BackIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
 );
 
 export const BankIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M11 3L5.5 6.5h11L11 3m8 8h-1v2h1v7H4v-7h1V11H4c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-7c0-1.1-.9-2-2-2zm-8 2v2h-2v-2h2zm4 0v2h-2v-2h2zm4 0v2h-2v-2h2z" />
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M22 19V22H2V19C2 18.45 2.45 18 3 18H21C21.55 18 22 18.45 22 19Z"
+      fill="#0A66C2"
+      stroke="#0A66C2"
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path d="M7 11H5V18H7V11Z" fill="#0A66C2" />
+    <path d="M11 11H9V18H11V11Z" fill="#0A66C2" />
+    <path d="M15 11H13V18H15V11Z" fill="#0A66C2" />
+    <path d="M19 11H17V18H19V11Z" fill="#0A66C2" />
+    <path
+      d="M23 22.75H1C0.59 22.75 0.25 22.41 0.25 22C0.25 21.59 0.59 21.25 1 21.25H23C23.41 21.25 23.75 21.59 23.75 22C23.75 22.41 23.41 22.75 23 22.75Z"
+      fill="#0A66C2"
+    />
+    <path
+      d="M21.37 5.74984L12.37 2.14984C12.17 2.06984 11.83 2.06984 11.63 2.14984L2.63 5.74984C2.28 5.88984 2 6.29984 2 6.67984V9.99984C2 10.5498 2.45 10.9998 3 10.9998H21C21.55 10.9998 22 10.5498 22 9.99984V6.67984C22 6.29984 21.72 5.88984 21.37 5.74984ZM12 8.49984C11.17 8.49984 10.5 7.82984 10.5 6.99984C10.5 6.16984 11.17 5.49984 12 5.49984C12.83 5.49984 13.5 6.16984 13.5 6.99984C13.5 7.82984 12.83 8.49984 12 8.49984Z"
+      fill="#0A66C2"
+    />
   </svg>
 );
 
 export const CardIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M20 8H4c-1.1 0-1.99.9-1.99 2L2 20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H4v-6h16v6zm0-8H4v-2h16v2z" />
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M19.125 4.5H4.875C3.42525 4.5 2.25 5.67525 2.25 7.125V16.875C2.25 18.3247 3.42525 19.5 4.875 19.5H19.125C20.5747 19.5 21.75 18.3247 21.75 16.875V7.125C21.75 5.67525 20.5747 4.5 19.125 4.5Z"
+      stroke="#0A66C2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M2.25 9H21.75M6 14.0625H8.25V15H6V14.0625Z"
+      stroke="#0A66C2"
+      stroke-width="1.875"
+      stroke-linejoin="round"
+    />
   </svg>
 );
 

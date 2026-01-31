@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
 
 export interface CountdownState {
   isExpired: boolean;
@@ -13,7 +13,10 @@ export interface CountdownState {
   totalSeconds: number;
 }
 
-export function useCountdown(expiresAt: string, onExpired?: () => void): CountdownState {
+export function useCountdown(
+  expiresAt: string,
+  onExpired?: () => void,
+): CountdownState {
   const [state, setState] = useState<CountdownState>({
     isExpired: false,
     timeRemaining: {
@@ -28,12 +31,10 @@ export function useCountdown(expiresAt: string, onExpired?: () => void): Countdo
   const expiredFiredRef = useRef(false);
   const onExpiredRef = useRef(onExpired);
 
-  // Update the ref when onExpired changes
   useEffect(() => {
     onExpiredRef.current = onExpired;
   }, [onExpired]);
 
-  // Countdown calculation effect
   useEffect(() => {
     if (!expiresAt) return;
 

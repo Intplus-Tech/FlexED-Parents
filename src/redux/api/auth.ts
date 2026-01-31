@@ -2,7 +2,6 @@ import { ApiEndpoints } from "@/utils/endpoints";
 import apiSlice from "..";
 import {
   CreateSchoolResponse,
-  ForgotPasswordResponse,
   RegisterParentResponse,
   ResetPasswordRequest,
 } from "@/@types/auth";

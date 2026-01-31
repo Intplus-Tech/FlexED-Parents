@@ -6,7 +6,7 @@ import {
   ParentDashboardResponse,
   ParentTransactionsResponse,
   MakePaymentRequest,
-  MakePaymentResponse
+  MakePaymentResponse,
 } from "@/@types/parents";
 import { methods } from "@/utils/methods";
 
@@ -22,7 +22,10 @@ const parentsApi = apiSlice.injectEndpoints({
         method: methods.GET,
       }),
     }),
-    getParentTransaction: builder.query<ParentTransactionsResponse, { limit?: number }>({
+    getParentTransaction: builder.query<
+      ParentTransactionsResponse,
+      { limit?: number }
+    >({
       query: (request) => ({
         url: QueryHelper(ApiEndpoints.parent.parentTransaction, request),
       }),
@@ -33,21 +36,23 @@ const parentsApi = apiSlice.injectEndpoints({
         url: ApiEndpoints.parent.parentDashbaord,
       }),
     }),
-
-    
-    makePayment: builder.mutation<
-      MakePaymentResponse,
-      MakePaymentRequest
+    getTransactionStatus: builder.query<
+      ParentTransactionsResponse,
+      { reference: string }
     >({
+      query: (request) => ({
+        url: ApiEndpoints.parent.transactionStatus(request.reference),
+        method: methods.GET,
+      }),
+    }),
+
+    makePayment: builder.mutation<MakePaymentResponse, MakePaymentRequest>({
       query: (payload) => ({
         url: ApiEndpoints.parent.makepayment,
         method: methods.POST,
         body: payload,
       }),
     }),
-
-
-
   }),
 });
 
@@ -55,5 +60,6 @@ export const {
   useGetParentDetailsQuery,
   useGetParentDashboardQuery,
   useGetParentTransactionQuery,
-  useMakePaymentMutation, 
+  useMakePaymentMutation,
+  useGetTransactionStatusQuery,
 } = parentsApi;

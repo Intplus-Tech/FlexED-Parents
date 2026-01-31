@@ -144,9 +144,6 @@ export interface MakePaymentRequest {
   email: string;
 }
 
-
-
-
 export interface MakePaymentResponse {
   success: boolean;
   message: string;
@@ -163,35 +160,60 @@ export interface MakePaymentResponse {
       amount: number;
     }>;
 
-  
-    dva: DVADetails};
-
-
+    dva: DVADetails;
+  };
 }
 
+export interface DVADetails {
+  account_number: string;
+  account_name: string;
+  expires_at: string; // ISO date string
+  expected_amount: string; // comes as string from API
+  bank: string;
+  currency: "NGN";
+  transaction_reference: string;
 
-export interface DVADetails  {
-      account_number: string;
+  raw: {
+    status: number;
+    success: boolean;
+    message: string;
+    data: {
+      is_blocked: boolean;
       account_name: string;
-      expires_at: string; // ISO date string
-      expected_amount: string; // comes as string from API
+      account_number: string;
+      expected_amount: string;
+      expires_at: string;
+      transaction_reference: string;
       bank: string;
       currency: "NGN";
-      transaction_reference: string;
-
-      raw: {
-        status: number;
-        success: boolean;
-        message: string;
-        data: {
-          is_blocked: boolean;
-          account_name: string;
-          account_number: string;
-          expected_amount: string;
-          expires_at: string;
-          transaction_reference: string;
-          bank: string;
-          currency: "NGN";
-        };
-      };
     };
+  };
+}
+
+export interface TransactionStatusResponse {
+  success: boolean;
+  message: string;
+  data: TransactionStatusData;
+  statusCode: number;
+}
+
+export interface TransactionStatusData {
+  reference: string;
+  summaryStatus: TransactionSummaryStatus;
+  count: number;
+  transactions: Transaction[];
+}
+
+export interface Transaction {
+  id: string;
+  reference: string;
+  groupReference: string;
+  providerReference: string;
+  status: TransactionStatus;
+  amount: number;
+  studentId: string;
+  paymentItemId: string;
+}
+
+export type TransactionSummaryStatus = "IN_PROGRESS" | "COMPLETED" | "FAILED";
+export type TransactionStatus = "PENDING" | "SUCCESS" | "FAILED";

@@ -1,13 +1,12 @@
-'use client';
+"use client";
 
-import React from "react"
+import React from "react";
 
-import { X, Copy, Check, Clock, AlertCircle } from 'lucide-react';
-import { useState } from 'react';
+import { X, Copy, Check, Clock, AlertCircle } from "lucide-react";
+import { useState } from "react";
 import { CountdownTimer } from "../countdown-timer";
 
-
-import { DVADetails } from '@/@types/parents';
+import { DVADetails } from "@/@types/parents";
 
 interface DVAPaymentContentProps {
   dvaDetails: DVADetails | null;
@@ -23,7 +22,7 @@ export function DVAPaymentContent({
   isModal = false,
 }: DVAPaymentContentProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
-
+  console.log(isExpired, "count down expired");
   if (!dvaDetails) return null;
 
   const handleCopy = async (value: string, fieldLabel: string) => {
@@ -32,7 +31,7 @@ export function DVAPaymentContent({
       setCopiedField(fieldLabel);
       setTimeout(() => setCopiedField(null), 2000);
     } catch (err) {
-      console.error('[v0] Failed to copy:', err);
+      console.error("[v0] Failed to copy:", err);
     }
   };
 
@@ -45,7 +44,7 @@ Reference: ${dvaDetails.transaction_reference}
 Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
   `.trim();
 
-  const contentClasses = isModal ? 'space-y-6' : 'space-y-6';
+  const contentClasses = isModal ? "space-y-6" : "space-y-6";
 
   return (
     <div className={contentClasses}>
@@ -56,12 +55,17 @@ Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
             <AlertCircle className="w-8 h-8 text-destructive" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-foreground mb-2">Payment Expired</h3>
+            <h3 className="text-lg font-bold text-foreground mb-2">
+              Payment Expired
+            </h3>
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-              This virtual account has expired and can no longer be used. Your payment details are no longer valid.
+              This virtual account has expired and can no longer be used. Your
+              payment details are no longer valid.
             </p>
             <div className="bg-secondary/50 rounded-lg p-4 text-sm text-muted-foreground">
-              <p className="font-semibold text-foreground mb-2">What&apos Next?</p>
+              <p className="font-semibold text-foreground mb-2">
+                What&apos Next?
+              </p>
               <ul className="text-left space-y-2">
                 <li>• Generate a new virtual account with updated details</li>
                 <li>• Contact support for assistance</li>
@@ -111,14 +115,12 @@ Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
                   {dvaDetails.bank}
                 </p>
                 <button
-                  onClick={() =>
-                    handleCopy(dvaDetails.bank, 'bank')
-                  }
+                  onClick={() => handleCopy(dvaDetails.bank, "bank")}
                   disabled={isExpired}
                   className="shrink-0 p-2 hover:bg-purple-500/10 text-purple-100 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Copy bank name"
                 >
-                  {copiedField === 'bank' ? (
+                  {copiedField === "bank" ? (
                     <Check className="w-4 h-4 text-green-600" />
                   ) : (
                     <Copy className="w-4 h-4 text-purple-500" />
@@ -138,13 +140,13 @@ Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
                 </p>
                 <button
                   onClick={() =>
-                    handleCopy(dvaDetails.account_number, 'accountNumber')
+                    handleCopy(dvaDetails.account_number, "accountNumber")
                   }
                   disabled={isExpired}
                   className="shrink-0 p-2 hover:bg-purple-500/10 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Copy account number"
                 >
-                  {copiedField === 'accountNumber' ? (
+                  {copiedField === "accountNumber" ? (
                     <Check className="w-4 h-4 text-green-600" />
                   ) : (
                     <Copy className="w-4 h-4 text-purple-500" />
@@ -164,13 +166,13 @@ Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
                 </p>
                 <button
                   onClick={() =>
-                    handleCopy(dvaDetails.account_name, 'accountHolder')
+                    handleCopy(dvaDetails.account_name, "accountHolder")
                   }
                   disabled={isExpired}
                   className="shrink-0 p-2 hover:bg-purple-500/10 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Copy account holder"
                 >
-                  {copiedField === 'accountHolder' ? (
+                  {copiedField === "accountHolder" ? (
                     <Check className="w-4 h-4 text-green-600" />
                   ) : (
                     <Copy className="w-4 h-4 text-purple-500" />
@@ -190,13 +192,16 @@ Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
                 </p>
                 <button
                   onClick={() =>
-                    handleCopy(dvaDetails.transaction_reference, 'referenceNumber')
+                    handleCopy(
+                      dvaDetails.transaction_reference,
+                      "referenceNumber",
+                    )
                   }
                   disabled={isExpired}
                   className="shrink-0 p-2 hover:bg-purple-500/10 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Copy reference number"
                 >
-                  {copiedField === 'referenceNumber' ? (
+                  {copiedField === "referenceNumber" ? (
                     <Check className="w-4 h-4 text-green-600" />
                   ) : (
                     <Copy className="w-4 h-4 text-purple-500" />
@@ -208,11 +213,11 @@ Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
 
           {/* Copy All Details */}
           <button
-            onClick={() => handleCopy(fullDetails, 'allDetails')}
+            onClick={() => handleCopy(fullDetails, "allDetails")}
             disabled={isExpired}
             className="w-full h-12 bg-secondary hover:bg-secondary/80 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {copiedField === 'allDetails' ? (
+            {copiedField === "allDetails" ? (
               <div className="flex items-center justify-center">
                 <Check className="w-4 h-4 mr-2 text-green-600" />
                 All Details Copied!
@@ -234,7 +239,10 @@ Amount: ${dvaDetails.currency} ${dvaDetails.expected_amount}
               <li>Log in to your bank account or mobile banking app</li>
               <li>Select transfer to another account</li>
               <li>Enter the account details above</li>
-              <li>Confirm the amount: {dvaDetails.currency} {dvaDetails.expected_amount}</li>
+              <li>
+                Confirm the amount: {dvaDetails.currency}{" "}
+                {dvaDetails.expected_amount}
+              </li>
               <li>Submit the transfer</li>
             </ol>
           </div>

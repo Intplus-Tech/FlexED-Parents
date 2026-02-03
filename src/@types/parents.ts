@@ -60,6 +60,7 @@ export interface StudentDashboard {
   id: string;
   firstName: string;
   lastName: string;
+  image?: string;
   class: StudentClass | null;
   totalOutstanding: number;
   items: PaymentItem[];
@@ -143,6 +144,11 @@ export interface MakePaymentRequest {
   duration: number;
   email: string;
 }
+export interface MakePaymentWithRedirectRequest {
+  studentIds: string[];
+  paymentItemIds: string[];
+  callbackUrl: string;
+}
 
 export interface MakePaymentResponse {
   success: boolean;
@@ -217,3 +223,25 @@ export interface Transaction {
 
 export type TransactionSummaryStatus = "IN_PROGRESS" | "COMPLETED" | "FAILED";
 export type TransactionStatus = "PENDING" | "SUCCESS" | "FAILED";
+
+export interface MakePaymentWithRedirectResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: PaymentsData;
+}
+
+export interface PaymentsData {
+  reference: string;
+  groupReference: string;
+  paymentUrl: string;
+  totalAmount: number;
+  transactions: Transaction[];
+}
+
+export interface Transaction {
+  transactionId: string;
+  reference: string;
+  studentId: string;
+  paymentItemId: string;
+}

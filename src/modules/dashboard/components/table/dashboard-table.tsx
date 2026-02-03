@@ -1,7 +1,53 @@
 import React from "react";
 import { PaymentTableSkeleton } from "../skeleton-loader/skeleton-loader";
-import { Payment } from "@/@types/dashboard";
 import { TransactionRow } from "@/@types/parents";
+
+type PaymentStatus = "PAID" | "FAILED" | "PENDING";
+
+interface StatusBadgeProps {
+  status?: string;
+}
+
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+  const baseClasses = "inline-block px-3 py-1 rounded-full font-medium";
+
+  const normalizedStatus = status?.toUpperCase() as PaymentStatus | undefined;
+
+  const variantClasses =
+    normalizedStatus === "PAID"
+      ? "bg-green-100 text-green-800"
+      : normalizedStatus === "FAILED"
+        ? "bg-red-100 text-red-800"
+        : normalizedStatus === "PENDING"
+          ? "bg-yellow-100 text-yellow-800"
+          : "bg-gray-100 text-gray-700";
+
+  return (
+    <span className={`${baseClasses} ${variantClasses}`}>
+      {normalizedStatus ?? status}
+    </span>
+  );
+};
+
+interface TooltipProps {
+  content: React.ReactNode;
+  children: React.ReactNode;
+}
+
+const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
+  return (
+    <div className="relative inline-block group ">
+      {children}
+      <div
+        className="  pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md bg-gray-900 px-2 py-1 text-xs text-white
+                   opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-opacity duration-150 whitespace-nowrap z-20"
+      >
+        {content}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+      </div>
+    </div>
+  );
+};
 
 interface PaymentTableProps {
   payments: TransactionRow[];
@@ -36,10 +82,18 @@ export default function PaymentTable({
                 <th className="px-6 py-4 text-left">
                   <input type="checkbox" className="w-5 h-5 cursor-pointer" />
                 </th>
-            
-                {["Time/Date", "Transaction ID", "Student Name","Class", "Amount Paid", "% Remaining", "Status"]?.map((header) => (
+
+                {[
+                  "Time/Date",
+                  "Transaction ID",
+                  "Student Name",
+                  "Class",
+                  "Amount Paid",
+                  "% Remaining",
+                  "Status",
+                ]?.map((header) => (
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 white-space-nowrap">
-                   { header}
+                    {header}
                   </th>
                 ))}
               </tr>
@@ -67,12 +121,16 @@ export default function PaymentTable({
                       />
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                      {payment?.time}
+                      {new Date(payment?.time).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {payment?.transactionId}
+                    <td className="px-6 py-4 text-sm text-gray-700 max-w-[100px]">
+                      <Tooltip content={payment?.transactionId}>
+                        <span className="block max-w-[100px] truncate cursor-pointer">
+                          {payment?.transactionId}
+                        </span>
+                      </Tooltip>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium whitespace-nowrap">
                       {payment?.studentName}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700">
@@ -85,16 +143,7 @@ export default function PaymentTable({
                       {payment?.percentRemaining}%
                     </td>
                     <td className="px-6 py-4 text-sm">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full font-medium ${payment?.status === "Successful"
-                            ? "bg-green-100 text-green-800"
-                            : payment?.status === "Failed"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                      >
-                        {payment?.status}
-                      </span>
+                      <StatusBadge status={payment?.status} />
                     </td>
                   </tr>
                 ))

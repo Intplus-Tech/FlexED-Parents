@@ -7,6 +7,8 @@ import {
   ParentTransactionsResponse,
   MakePaymentRequest,
   MakePaymentResponse,
+  MakePaymentWithRedirectResponse,
+  MakePaymentWithRedirectRequest,
 } from "@/@types/parents";
 import { methods } from "@/utils/methods";
 
@@ -53,6 +55,16 @@ const parentsApi = apiSlice.injectEndpoints({
         body: payload,
       }),
     }),
+    makePaymentWithRedirect: builder.mutation<
+      MakePaymentWithRedirectResponse,
+      MakePaymentWithRedirectRequest
+    >({
+      query: (payload) => ({
+        url: ApiEndpoints.parent.makePaymentWithRedirect,
+        method: methods.POST,
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -62,4 +74,5 @@ export const {
   useGetParentTransactionQuery,
   useMakePaymentMutation,
   useGetTransactionStatusQuery,
+  useMakePaymentWithRedirectMutation,
 } = parentsApi;

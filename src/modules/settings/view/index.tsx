@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useChangePasswordMutation } from "@/redux/api/auth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { showerror, showsuccess } from "@/utils/toast";
 
 const passwordChangeSchema = z
   .object({
     email: z.string().email("Invalid email address"),
-    oldPassword: z.string().min(1, "Old password is required"),
+    currentPassword: z.string().min(1, "Current password is required"),
     newPassword: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z
       .string()
@@ -22,11 +26,14 @@ const passwordChangeSchema = z
 type PasswordChangeForm = z.infer<typeof passwordChangeSchema>;
 
 export default function SettingsView() {
-  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { currentUser } = useSelector((state: RootState) => state.authState);
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
 
   const {
     register,
@@ -36,24 +43,31 @@ export default function SettingsView() {
   } = useForm<PasswordChangeForm>({
     resolver: zodResolver(passwordChangeSchema),
     defaultValues: {
-      email: "NarayanMurthy@gmail.com",
+      email: currentUser?.email || "",
     },
   });
 
   const onSubmit = async (data: PasswordChangeForm) => {
-    setIsSubmitting(true);
     setSuccessMessage("");
+    setErrorMessage("");
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setSuccessMessage("Password changed successfully!");
-      reset();
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      console.error("Error changing password:", error);
-    } finally {
-      setIsSubmitting(false);
+      const response = await changePassword({
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      }).unwrap();
+
+      setSuccessMessage(response.message || "Password changed successfully!");
+      reset({
+        email: currentUser?.email || "",
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      showsuccess(response.message || "Password changed successfully!")
+    } catch (error: any) {
+      const message = error?.data?.message || "Failed to change password. Please try again.";
+      showerror(message)
     }
   };
 
@@ -83,31 +97,31 @@ export default function SettingsView() {
             </div>
           </div>
 
-          {/* Old Password Field */}
+          {/* Current Password Field */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Old Password
+              Current Password
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                 🔒
               </span>
               <input
-                type={showOldPassword ? "text" : "password"}
-                {...register("oldPassword")}
+                type={showCurrentPassword ? "text" : "password"}
+                {...register("currentPassword")}
                 className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <button
                 type="button"
-                onClick={() => setShowOldPassword(!showOldPassword)}
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showOldPassword ? "🚫" : "👁️"}
+                {showCurrentPassword ? "🚫" : "👁️"}
               </button>
             </div>
-            {errors.oldPassword && (
+            {errors.currentPassword && (
               <p className="text-sm text-red-600">
-                {errors.oldPassword.message}
+                {errors.currentPassword.message}
               </p>
             )}
           </div>
@@ -177,13 +191,20 @@ export default function SettingsView() {
             </div>
           )}
 
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+              {errorMessage}
+            </div>
+          )}
+
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading}
             className="w-full py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white font-semibold rounded-lg transition-colors duration-200"
           >
-            {isSubmitting ? "Changing Password..." : "Change Password"}
+            {isLoading ? "Changing Password..." : "Change Password"}
           </button>
         </form>
       </div>

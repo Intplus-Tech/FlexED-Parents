@@ -49,7 +49,7 @@ export default function LoginView() {
           setAuth({
             accessToken: Data.accessToken,
             currentUser: Data.user,
-          })
+          }),
         );
         router.push("/dashboard");
       } else showerror(res?.error ?? "Something went wrong");
@@ -61,7 +61,7 @@ export default function LoginView() {
     <div className="min-h-screen flex">
       {/* Left Side - Branding */}
       <div className="hidden lg:flex lg:w-1/2  flex-col justify-center items-start px-16">
-        <div className="mb-12">
+        <div className="mb-12 w-full max-w-lg">
           <div className="mb-8">
             <Logo />
           </div>
@@ -76,7 +76,7 @@ export default function LoginView() {
 
       {/* Right Side - Login Form */}
       <div className="w-full lg:w-1/2  flex flex-col justify-center items-center px-6 sm:px-12">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Hey, Hello</h2>
           <p className="text-gray-600 mb-8">
             Welcome back, Enter your login information
@@ -163,20 +163,9 @@ export default function LoginView() {
               type="submit"
               className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
             >
-              Login
+              {isLoading ? "Logging in..." : "Login to your account"}
             </button>
           </form>
-
-          {/* Sign Up Link */}
-          <p className="text-center text-gray-700 mt-6">
-            Don't have an account?{" "}
-            <Link
-              href="/auth/signup"
-              className="text-purple-600 font-semibold hover:text-purple-700"
-            >
-              Create Account
-            </Link>
-          </p>
         </div>
       </div>
     </div>

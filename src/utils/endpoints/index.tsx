@@ -18,6 +18,7 @@ export const parent = {
   makepayment: "/payments/initiate-student-dva",
   transactionStatus: (reference: string) =>
     `/payments/transactions/${reference}/status`,
+  makePaymentWithRedirect: `/payments/initiate-student-payment`,
 };
 
 export const ApiEndpoints = {

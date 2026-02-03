@@ -25,7 +25,16 @@ export const authApi = apiSlice.injectEndpoints({
         body: request,
       }),
     }),
-
+    changePassword: builder.mutation<
+      CreateSchoolResponse,
+      { currentPassword: string; newPassword: string }
+    >({
+      query: (request) => ({
+        url: ApiEndpoints.auth.changePassword,
+        method: methods.POST,
+        body: request,
+      }),
+    }),
     resetPassword: builder.mutation<CreateSchoolResponse, ResetPasswordRequest>(
       {
         query: (request) => ({
@@ -38,4 +47,4 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useParentRegisterMutation, useResetPasswordMutation } = authApi;
+export const { useParentRegisterMutation, useResetPasswordMutation, useChangePasswordMutation } = authApi;

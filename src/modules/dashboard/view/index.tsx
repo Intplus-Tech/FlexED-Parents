@@ -8,31 +8,8 @@ import PaymentTable from "../components/table/dashboard-table";
 import PaymentModal from "../components/payment-modal";
 import { useGetParentDashboardQuery, useGetParentTransactionQuery } from "@/redux/api/parents";
 import { StudentDashboard } from "@/@types/parents";
+import { useRouter } from "next/navigation";
 
-
-
-const mockPayments: Payment[] = [
-  {
-    id: 1,
-    time: "2:34pm",
-    transactionId: "23353213",
-    studentName: "Chiamaka Adebayo",
-    class: "SSS 3",
-    amountPaid: 150000,
-    percentageRemaining: 75,
-    status: "Successful",
-  },
-  {
-    id: 2,
-    time: "2:34pm",
-    transactionId: "62889208",
-    studentName: "Aisha Mohammed",
-    class: "JSS 1",
-    amountPaid: 150000,
-    percentageRemaining: 25,
-    status: "Failed",
-  },
-];
 
 export default function Dashboard() {
   const { data: dashbaord, isFetching,isLoading } = useGetParentDashboardQuery();
@@ -40,10 +17,11 @@ export default function Dashboard() {
   const [selectedStudent, setSelectedStudent] =
     useState<StudentDashboard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const router = useRouter();
   const handlePayNow = (student: StudentDashboard) => {
     setSelectedStudent(student);
-    setIsModalOpen(true);
+    // setIsModalOpen(true);
+    router.push(`/pay-fees?studentId=${student.id}`);
   };
 
   const handleCloseModal = () => {
@@ -67,7 +45,7 @@ export default function Dashboard() {
         <Header
           studentCount={dashbaord?.data?.students?.length || 0}
           totalOutstanding={totalOutstanding}
-          // currentTermStatus={dashbaord?.data?.currentTermStatus || 0}
+          currentTermStatus={totalOutstanding > 0 ? "Outstanding" : "Paid"}
           isLoading={isLoading||isFetching}
         />
 

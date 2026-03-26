@@ -92,7 +92,7 @@ export default function PaymentTable({
                   "% Remaining",
                   "Status",
                 ]?.map((header) => (
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 white-space-nowrap">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
                     {header}
                   </th>
                 ))}

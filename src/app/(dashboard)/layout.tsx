@@ -22,7 +22,6 @@ export default function PortalLayout({
   const dispatch = useDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { currentUser } = useSelector((state: RootState) => state.authState);
- console.log(status, "status");
 
 
  useEffect(() => {

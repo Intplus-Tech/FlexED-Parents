@@ -27,16 +27,20 @@ const baseQueryWithAuthRedirect: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  const result = await baseQuery(args, api, extraOptions);
+  const result: any = await baseQuery(args, api, extraOptions);
 
   if (
     result.error &&
-    (result.error.status === 401 || result.error.status === 403)
+    (result.error.statusCode === 401 ||
+      result.error.statusCode === 403 ||
+      result.error.statusCode === 404)
   ) {
+    console.log("result.error", result.error);
     if (typeof window !== "undefined") {
-      showerror("Session expired, please login again")
-      signOut();
-      window.location.href = "/auth/login";
+      showerror("Session expired, please login again");
+      signOut({ redirect: false, callbackUrl: "/auth/login" }).then((data) => {
+        window.location.href = data?.url || "/auth/login";
+      });
     }
   }
 

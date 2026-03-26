@@ -28,8 +28,9 @@ export default function PortalSidebar({ onClose }: PortalSidebarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const { data: session } = useSession();
 
-  const handleLogout = () => {
-    void signOut({ callbackUrl: "/auth/login" });
+  const handleLogout = async () => {
+    const data = await signOut({ redirect: false, callbackUrl: "/auth/login" });
+    router.push(data?.url || "/auth/login");
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

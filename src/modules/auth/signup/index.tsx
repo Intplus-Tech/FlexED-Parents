@@ -101,7 +101,7 @@ function SignupView() {
         <div className="w-full lgw-1/2 ">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-6 max-w-md mx-auto"
+            className="space-y-2 max-w-md mx-auto"
           >
             <h1 className="font-medium text-2xl py-2">Create your account</h1>
             <div>
@@ -126,7 +126,7 @@ function SignupView() {
               )}
             </div>
 
-            <div className=" pt-6">
+            <div className=" pt-3">
               <h3 className="text-lg font-semibold text-gray-900 mb-6">
                 Secure Your Access
               </h3>
@@ -200,7 +200,7 @@ function SignupView() {
               </div>
             </div>
 
-            <div className=" pt-6 space-y-4">
+            <div className=" pt-6 space-y-1">
               <label className="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
                 <input
                   type="checkbox"

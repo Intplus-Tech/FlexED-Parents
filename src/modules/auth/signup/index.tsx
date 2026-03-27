@@ -17,6 +17,7 @@ import { SignupFormData, signupSchema } from "@/lib/validation";
 import { useGetParentDetailsQuery } from "@/redux/api/parents";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useParentRegisterMutation } from "@/redux/api/auth";
+import { showerror, showsuccess } from "@/utils/toast";
 
 function SignupView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -63,10 +64,10 @@ function SignupView() {
         schoolId: String(parentDetails?.data?.school?._id),
       }).unwrap();
       localStorage.setItem("parentToken", res.data.token);
-      router.push("/dashboard");
-      console.log("Parent registered successfully:", res);
-    } catch (error) {
-      console.error("Error registering parent:", error);
+      showsuccess(res?.message);
+      router.push("/auth/login");
+    } catch (error: any) {
+      showerror(error?.data?.message);
     }
   };
 

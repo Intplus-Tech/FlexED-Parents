@@ -25,8 +25,6 @@ export default function Header({
 
   const router = useRouter();
 
-console.log(currentTermStatus,"currentTermStatus");
-
   if (isLoading) {
     return <HeaderSkeleton />;
   }
@@ -36,9 +34,9 @@ console.log(currentTermStatus,"currentTermStatus");
       <div className="grid grid-cols-1 lg:grid-cols-4  items-start lg:items-center justify-between gap-8">
         {/* Left Section: Student Count and Add Button */}
         <div className="space-y-3 col-span-1">
-            <p className="text-lg opacity-90">MY STUDENTS</p>
-            <p className="text-xl md:text-4xl font-bold mt-2">{studentCount}</p>
-            <p className="bg-black w-fit whitespace-nowrap text-white px-4 py-2 rounded-full font-semibold flex items-center gap-2 hover:bg-gray-900 transition-colors">Add Student  <span className=" ml-8 text-xl h-5 w-5 flex items-center justify-center bg-white rounded-full text-black">+</span></p>
+          <p className="text-lg opacity-90">MY STUDENTS</p>
+          <p className="text-xl md:text-4xl font-bold mt-2">{studentCount}</p>
+          {/* <p className="bg-black w-fit whitespace-nowrap text-white px-4 py-2 rounded-full font-semibold flex items-center gap-2 hover:bg-gray-900 transition-colors">Add Student  <span className=" ml-8 text-xl h-5 w-5 flex items-center justify-center bg-white rounded-full text-black">+</span></p> */}
         </div>
 
         {/* Right Section: Metrics */}
@@ -58,9 +56,14 @@ console.log(currentTermStatus,"currentTermStatus");
                 <p className="text-3xl font-bold text-red-500 mt-2">
                   {formatCurrency(totalOutstanding)}
                 </p>
-                {totalOutstanding>0 &&<button onClick={() => router.push("/pay-fees")} className="mt-4 border-2 border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
-                  Pay Now
-                </button>}
+                {totalOutstanding > 0 && (
+                  <button
+                    onClick={() => router.push("/pay-fees")}
+                    className="mt-4 border-2 border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
+                  >
+                    Pay Now
+                  </button>
+                )}
               </>
             )}
           </div>

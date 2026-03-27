@@ -15,6 +15,7 @@ export const parent = {
   parentChildren: "/parents/me/children",
   parentDashbaord: "/parents/me/dashboard",
   parentTransaction: "/parents/me/transactions",
+  parentProfile: "/parents/me/profile",
   makepayment: "/payments/initiate-student-dva",
   transactionStatus: (reference: string) =>
     `/payments/transactions/${reference}/status`,

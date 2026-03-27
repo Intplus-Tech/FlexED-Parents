@@ -12,6 +12,10 @@ import {
   PaymentIcon,
   SettingsIcon,
 } from "@/icons";
+import {
+  useGetParentDetailsQuery,
+  useGetParentProfileQuery,
+} from "@/redux/api/parents";
 
 interface PortalSidebarProps {
   onClose?: () => void;
@@ -26,6 +30,7 @@ export default function PortalSidebar({ onClose }: PortalSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
+  const { data: parentDetails } = useGetParentProfileQuery();
   const { data: session } = useSession();
 
   const handleLogout = async () => {

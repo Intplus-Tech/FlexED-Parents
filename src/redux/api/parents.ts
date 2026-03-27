@@ -48,6 +48,13 @@ const parentsApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    getParentProfile: builder.query<GetParentsDetailsResponse, void>({
+      query: () => ({
+        url: ApiEndpoints.parent.parentProfile,
+        method: methods.GET,
+      }),
+    }),
+
     makePayment: builder.mutation<MakePaymentResponse, MakePaymentRequest>({
       query: (payload) => ({
         url: ApiEndpoints.parent.makepayment,
@@ -75,4 +82,5 @@ export const {
   useMakePaymentMutation,
   useGetTransactionStatusQuery,
   useMakePaymentWithRedirectMutation,
+  useGetParentProfileQuery,
 } = parentsApi;

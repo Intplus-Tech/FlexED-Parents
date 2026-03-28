@@ -95,3 +95,25 @@ export const passwordChangeSchema = z
   });
 
 export type PasswordChangeFormData = z.infer<typeof passwordChangeSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+
+export const verifyOtpSchema = z.object({
+  otp: z.string().min(5, "OTP must be at least 5 characters"),
+});
+
+export type VerifyOtpFormData = z.infer<typeof verifyOtpSchema>;
+
+export const resetPasswordSchema = z.object({
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;

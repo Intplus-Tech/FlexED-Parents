@@ -151,7 +151,7 @@ export default function LoginView() {
                 <span className="text-sm text-gray-700">Remember me</span>
               </label>
               <Link
-                href="#"
+                href="/auth/forgot-password"
                 className="text-sm text-purple-600 hover:text-purple-700 font-medium"
               >
                 Forgot password?

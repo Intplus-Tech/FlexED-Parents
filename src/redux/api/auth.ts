@@ -2,6 +2,8 @@ import { ApiEndpoints } from "@/utils/endpoints";
 import apiSlice from "..";
 import {
   CreateSchoolResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
   RegisterParentResponse,
   ResetPasswordRequest,
 } from "@/@types/auth";
@@ -44,7 +46,22 @@ export const authApi = apiSlice.injectEndpoints({
         }),
       },
     ),
+    forgotPassword: builder.mutation<
+      ForgotPasswordResponse,
+      ForgotPasswordRequest
+    >({
+      query: (request) => ({
+        url: ApiEndpoints.auth.forgotPassword,
+        method: "POST",
+        body: request,
+      }),
+    }),
   }),
 });
 
-export const { useParentRegisterMutation, useResetPasswordMutation, useChangePasswordMutation } = authApi;
+export const {
+  useParentRegisterMutation,
+  useResetPasswordMutation,
+  useChangePasswordMutation,
+  useForgotPasswordMutation,
+} = authApi;

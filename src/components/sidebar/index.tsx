@@ -53,7 +53,7 @@ export default function PortalSidebar({ onClose }: PortalSidebarProps) {
       {/* Logo Section */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-linear-to-br from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
             <span className="text-lg font-bold text-white">F</span>
           </div>
           <div>

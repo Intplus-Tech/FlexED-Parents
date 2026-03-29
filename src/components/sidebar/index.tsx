@@ -12,6 +12,8 @@ import {
   PaymentIcon,
   SettingsIcon,
 } from "@/icons";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/slice/auth";
 import {
   useGetParentDetailsQuery,
   useGetParentProfileQuery,
@@ -32,8 +34,10 @@ export default function PortalSidebar({ onClose }: PortalSidebarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const { data: parentDetails } = useGetParentProfileQuery();
   const { data: session } = useSession();
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
+    dispatch(logout());
     const data = await signOut({ redirect: false, callbackUrl: "/auth/login" });
     router.push(data?.url || "/auth/login");
   };

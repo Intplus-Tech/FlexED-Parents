@@ -9,6 +9,7 @@ import { RootState } from "./store";
 import { signOut } from "next-auth/react";
 import { ApiEndpoints } from "@/utils/endpoints";
 import { showerror } from "@/utils/toast";
+import { logout } from "@/redux/slice/auth";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: ApiEndpoints.baseUrl,
@@ -38,6 +39,7 @@ const baseQueryWithAuthRedirect: BaseQueryFn<
     console.log("result.error", result.error);
     if (typeof window !== "undefined") {
       showerror("Session expired, please login again");
+      api.dispatch(logout());
       signOut({ redirect: false, callbackUrl: "/auth/login" }).then((data) => {
         window.location.href = data?.url || "/auth/login";
       });

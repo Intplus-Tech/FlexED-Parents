@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -14,8 +14,9 @@ import {
 import { LockIcon, EyeIcon, EyeOffIcon, Logo } from "@/icons";
 import { useResetPasswordMutation } from "@/redux/api/auth";
 import { showerror, showsuccess } from "@/utils/toast";
+import { LogoLoader } from "@/components/ui/logo-loader";
 
-export default function ResetPasswordView() {
+function ResetPasswordContent() {
   const [step, setStep] = useState<1 | 2>(1);
   const [storedToken, setStoredToken] = useState<string>("");
 
@@ -246,5 +247,19 @@ export default function ResetPasswordView() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordView() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen flex items-center justify-center">
+          <LogoLoader size={80} />
+        </div>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

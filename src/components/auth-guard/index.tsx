@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { SignInResponse } from "@/@types/auth";
 import { setAuth } from "@/redux/slice/auth";
+import { LogoLoader } from "@/components/ui/logo-loader";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -44,10 +45,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   if (status === "loading" || (status === "authenticated" && !currentUser)) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-gray-50/30">
-        <div className="flex items-center gap-3 text-gray-700">
-          <div className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-purple-600 animate-spin" />
-          <span className="text-sm font-medium">Authenticating…</span>
-        </div>
+        <LogoLoader size={80} />
       </div>
     );
   }

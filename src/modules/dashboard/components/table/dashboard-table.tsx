@@ -1,6 +1,7 @@
 import React from "react";
 import { PaymentTableSkeleton } from "../skeleton-loader/skeleton-loader";
 import { TransactionRow } from "@/@types/parents";
+import { Receipt } from "lucide-react";
 
 type PaymentStatus = "PAID" | "FAILED" | "PENDING";
 
@@ -72,17 +73,13 @@ export default function PaymentTable({
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Last Payment</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Payments</h2>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="px-6 py-4 text-left">
-                  <input type="checkbox" className="w-5 h-5 cursor-pointer" />
-                </th>
-
                 {[
                   "Time/Date",
                   "Transaction ID",
@@ -92,7 +89,10 @@ export default function PaymentTable({
                   "% Remaining",
                   "Status",
                 ]?.map((header) => (
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
+                  <th
+                    key={header}
+                    className="px-6 py-4 text-left text-sm font-semibold text-gray-700 whitespace-nowrap"
+                  >
                     {header}
                   </th>
                 ))}
@@ -101,11 +101,14 @@ export default function PaymentTable({
             <tbody>
               {payments.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={8}
-                    className="px-6 py-8 text-center text-gray-500"
-                  >
-                    No payments found
+                  <td colSpan={7} className="px-6 py-16">
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <Receipt className="w-8 h-8 text-gray-300" />
+                      <p className="text-gray-500 font-medium">No payments yet</p>
+                      <p className="text-gray-400 text-sm">
+                        Your payment history will show up here once you make a payment
+                      </p>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -114,12 +117,6 @@ export default function PaymentTable({
                     key={payment?.paymentItemId}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="px-6 py-4">
-                      <input
-                        type="checkbox"
-                        className="w-5 h-5 cursor-pointer"
-                      />
-                    </td>
                     <td className="px-6 py-4 text-sm text-gray-700 font-medium">
                       {new Date(payment?.time).toLocaleDateString()}
                     </td>

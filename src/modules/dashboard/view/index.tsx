@@ -8,6 +8,7 @@ import {
   useGetParentTransactionQuery,
   useGetParentProfileQuery,
 } from "@/redux/api/parents";
+import { useGetParentWalletQuery } from "@/redux/api/parent-wallet";
 import { StudentDashboard } from "@/@types/parents";
 import { useRouter } from "next/navigation";
 
@@ -19,6 +20,7 @@ export default function Dashboard() {
     isLoading: isPaymentLoading,
   } = useGetParentTransactionQuery({ limit: 10 });
   const { data: profileData } = useGetParentProfileQuery();
+  const { data: walletData } = useGetParentWalletQuery();
   const router = useRouter();
 
   const handlePayNow = (student: StudentDashboard) => {
@@ -40,6 +42,7 @@ export default function Dashboard() {
           currentTermStatus={totalOutstanding > 0 ? "Outstanding" : "Paid"}
           isLoading={isLoading || isFetching}
           parentFirstName={profileData?.data?.parent?.firstName}
+          walletBalance={walletData?.data?.balance}
         />
 
         <div className="mt-12">

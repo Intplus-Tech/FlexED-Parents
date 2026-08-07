@@ -51,7 +51,15 @@ const baseQueryWithAuthRedirect: BaseQueryFn<
 
 const apiSlice = createApi({
   baseQuery: baseQueryWithAuthRedirect,
-  tagTypes: ["Transaction", "sms", "students", "academicSession", "classes"],
+  tagTypes: [
+    "Transaction",
+    "sms",
+    "students",
+    "academicSession",
+    "classes",
+    "ParentWallet",
+    "ParentDashboard",
+  ],
   endpoints: () => ({}),
 });
 

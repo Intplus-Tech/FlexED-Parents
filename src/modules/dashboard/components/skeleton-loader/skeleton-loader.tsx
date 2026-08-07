@@ -13,8 +13,8 @@ export function HeaderSkeleton() {
         <div className="h-11 bg-white/20 rounded-xl w-48 animate-pulse"></div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {[1, 2, 3].map((item) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((item) => (
           <div
             key={item}
             className="bg-white/10 border border-white/15 rounded-2xl p-5 h-24 flex items-center justify-center"

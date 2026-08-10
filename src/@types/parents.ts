@@ -144,10 +144,17 @@ export interface MakePaymentRequest {
   duration: number;
   email: string;
 }
+export interface PaymentPair {
+  studentId: string;
+  paymentItemId: string;
+}
+
 export interface MakePaymentWithRedirectRequest {
-  studentIds: string[];
-  paymentItemIds: string[];
-  callbackUrl: string;
+  /** One entry per (student, paymentItem) pair — repeat a student for each
+   * item they're paying for. Unambiguous, unlike the legacy parallel-array
+   * shape this replaces. */
+  payments: PaymentPair[];
+  callbackUrl?: string;
 }
 
 export interface MakePaymentResponse {

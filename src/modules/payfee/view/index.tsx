@@ -12,19 +12,20 @@ import { RootState } from "@/redux/store";
 import { useCountdown } from "@/hooks/use-countdown-timer";
 import { useDVAStorage } from "@/hooks/use-dva-storage";
 import { DVAPaymentContent } from "../components/dva-payment-modal";
-import { BankIcon, CardIcon } from "@/icons";
+import { PaymentErrorModal } from "../components/payment-error-modal";
 import { StudentSkeletonGrid } from "../loader";
 import { CheckCircle2, Circle, User, Receipt, ShieldCheck } from "lucide-react";
+import { showsuccess } from "@/utils/toast";
+
+// Flat service fee shown to the parent for transparency — never sent to the
+// backend, which computes the real chargeable amount from the selected items.
+const SERVICE_FEE = 500;
 
 export default function PayFeesView() {
-  const [selectedMethod, setSelectedMethod] = useState<"card" | "transfer">(
-    "card",
-  );
-  const [expandedMethod, setExpandedMethod] = useState<
-    "card" | "transfer" | null
-  >("card");
+  const [expandedMethod] = useState<"card" | "transfer" | null>("card");
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [paymentError, setPaymentError] = useState<unknown>(null);
 
   const { dvaDetails, saveDVA, clearDVA } = useDVAStorage();
 
@@ -90,27 +91,35 @@ export default function PayFeesView() {
     return acc + sum;
   }, 0);
 
+  const totalWithServiceFee = totalPayableAmount + SERVICE_FEE;
+
   const isAnySelected = selectedItemIds.length > 0;
 
   const handlePayment = async () => {
     if (!data?.data || !isAnySelected) return;
 
     try {
-      const studentIdsToPay = Array.from(
-        new Set(selectedItemIds.map((id) => id.split("_")[0])),
-      );
-      const itemIdsToPay = Array.from(
-        new Set(selectedItemIds.map((id) => id.split("_")[1])),
-      );
+      // One entry per (student, paymentItem) pair — a student paying for 3
+      // items appears 3 times, once per item.
+      const paymentPairs = selectedItemIds.map((id) => {
+        const [studentId, paymentItemId] = id.split("_");
+        return { studentId, paymentItemId };
+      });
 
       if (expandedMethod === "card") {
         const response = await makePaymentWithRedirect({
-          studentIds: studentIdsToPay,
-          paymentItemIds: itemIdsToPay,
+          payments: paymentPairs,
           callbackUrl: `${window.location.origin}/pay-fees`,
         }).unwrap();
+        showsuccess("Redirecting you to a secure checkout...");
         window.location.href = response?.data?.paymentUrl;
       } else {
+        const studentIdsToPay = Array.from(
+          new Set(paymentPairs.map((p) => p.studentId)),
+        );
+        const itemIdsToPay = Array.from(
+          new Set(paymentPairs.map((p) => p.paymentItemId)),
+        );
         const response = await makePayment({
           studentIds: studentIdsToPay,
           paymentItemIds: itemIdsToPay,
@@ -118,10 +127,11 @@ export default function PayFeesView() {
           duration: 1,
         }).unwrap();
         saveDVA(response?.data?.dva || null);
+        showsuccess("Virtual account generated — complete your transfer to pay.");
       }
     } catch (error) {
       console.error("Payment failed", error);
-      alert("Payment failed. Please try again.");
+      setPaymentError(error);
     }
   };
 
@@ -305,95 +315,46 @@ export default function PayFeesView() {
             </div>
 
             <div className="p-6 bg-gray-50/30">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-gray-500 text-sm">Selected Total</span>
+                <span className="text-gray-900 font-semibold">
+                  ₦{totalPayableAmount.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-gray-500 text-sm">Service Fee</span>
+                <span className="text-gray-900 font-semibold">
+                  ₦{SERVICE_FEE.toLocaleString()}
+                </span>
+              </div>
+
+              <div className="h-px w-full bg-gray-200 mb-4" />
+
               <div className="flex justify-between items-end mb-6">
                 <span className="text-gray-500 font-medium">
-                  Selected Total
+                  Total Payable
                 </span>
                 <span className="text-4xl font-bold text-gray-900 tracking-tighter">
                   <span className="text-2xl text-gray-400 font-normal mr-1">
                     ₦
                   </span>
-                  {totalPayableAmount.toLocaleString()}
+                  {totalWithServiceFee.toLocaleString()}
                 </span>
               </div>
 
               <div className="h-px w-full bg-gray-200 mb-6" />
 
-              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-                Payment Method
-              </h3>
-
-              <div className="space-y-3">
-                {/* Card Payment Option */}
-                <button
-                  onClick={() => {
-                    setSelectedMethod("card");
-                    setExpandedMethod(
-                      expandedMethod === "card" ? null : "card",
-                    );
-                  }}
-                  className={`w-full p-4 flex items-center space-x-4 border rounded-xl transition-all ${
-                    selectedMethod === "card"
-                      ? "border-purple-600 bg-purple-50/30 ring-1 ring-purple-600"
-                      : "border-gray-200 hover:border-gray-300 bg-white"
-                  }`}
-                >
-                  <div
-                    className={`flex items-center justify-center w-5 h-5 rounded-full border ${selectedMethod === "card" ? "border-purple-600" : "border-gray-300"}`}
-                  >
-                    {selectedMethod === "card" && (
-                      <div className="w-2.5 h-2.5 bg-purple-600 rounded-full" />
-                    )}
-                  </div>
-                  <CardIcon className="w-6 h-6 text-gray-700" />
-                  <span className="font-medium text-gray-900 flex-1 text-left">
-                    Pay With Card
-                  </span>
-                </button>
-
-                {expandedMethod === "card" && (
-                  <div className="px-1 py-2 animate-in fade-in slide-in-from-top-2">
-                    <button
-                      onClick={handlePayment}
-                      disabled={isPayingWithRedirect || !isAnySelected}
-                      className="w-full py-3.5 bg-linear-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center relative overflow-hidden"
-                    >
-                      <span className="relative z-10">
-                        {isPayingWithRedirect
-                          ? "Processing Secure Gateway..."
-                          : `Pay ₦${totalPayableAmount.toLocaleString()} Now`}
-                      </span>
-                    </button>
-                  </div>
-                )}
-
-                {/* Transfer Payment Option */}
-                {/* <button
-                  onClick={() => {
-                    setSelectedMethod("transfer");
-                    setExpandedMethod(
-                      expandedMethod === "transfer" ? null : "transfer",
-                    );
-                  }}
-                  className={`w-full p-4 flex items-center space-x-4 border rounded-xl transition-all ${
-                    selectedMethod === "transfer"
-                      ? "border-purple-600 bg-purple-50/30 ring-1 ring-purple-600"
-                      : "border-gray-200 hover:border-gray-300 bg-white"
-                  }`}
-                >
-                  <div
-                    className={`flex items-center justify-center w-5 h-5 rounded-full border ${selectedMethod === "transfer" ? "border-purple-600" : "border-gray-300"}`}
-                  >
-                    {selectedMethod === "transfer" && (
-                      <div className="w-2.5 h-2.5 bg-purple-600 rounded-full" />
-                    )}
-                  </div>
-                  <BankIcon className="w-6 h-6 text-gray-700" />
-                  <span className="font-medium text-gray-900 flex-1 text-left">
-                    Bank Transfer
-                  </span>
-                </button> */}
-              </div>
+              <button
+                onClick={handlePayment}
+                disabled={isPayingWithRedirect || !isAnySelected}
+                className="w-full py-3.5 bg-linear-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center relative overflow-hidden"
+              >
+                <span className="relative z-10">
+                  {isPayingWithRedirect
+                    ? "Processing Secure Gateway..."
+                    : `Pay ₦${totalWithServiceFee.toLocaleString()} Now`}
+                </span>
+              </button>
             </div>
 
             {/* Render transfer details outside the button flow but inside the card to keep the summary isolated */}
@@ -410,6 +371,12 @@ export default function PayFeesView() {
           </p>
         </div>
       </div>
+
+      <PaymentErrorModal
+        isOpen={paymentError !== null}
+        onClose={() => setPaymentError(null)}
+        error={paymentError}
+      />
     </div>
   );
 }

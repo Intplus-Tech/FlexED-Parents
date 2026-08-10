@@ -20,6 +20,9 @@ export const parent = {
   transactionStatus: (reference: string) =>
     `/payments/transactions/${reference}/status`,
   makePaymentWithRedirect: `/payments/initiate-student-payment`,
+  parentWallet: "/parent-wallets/me",
+  parentWalletLedger: "/parent-wallets/me/ledger",
+  parentWalletPay: "/parent-wallets/me/pay",
 };
 
 export const ApiEndpoints = {

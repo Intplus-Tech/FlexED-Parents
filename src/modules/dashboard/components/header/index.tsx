@@ -1,7 +1,7 @@
 import React from "react";
 import { HeaderSkeleton } from "../skeleton-loader/skeleton-loader";
 import { useRouter } from "next/navigation";
-import { Users, Wallet, BadgeCheck, ArrowRight } from "lucide-react";
+import { Users, Receipt, Wallet, BadgeCheck, ArrowRight } from "lucide-react";
 
 interface HeaderProps {
   studentCount: number;
@@ -9,6 +9,7 @@ interface HeaderProps {
   currentTermStatus: string;
   isLoading: boolean;
   parentFirstName?: string;
+  walletBalance?: number;
 }
 
 export default function Header({
@@ -17,6 +18,7 @@ export default function Header({
   currentTermStatus,
   isLoading,
   parentFirstName,
+  walletBalance,
 }: HeaderProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-NG", {
@@ -57,7 +59,7 @@ export default function Header({
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white/10 border border-white/15 rounded-2xl p-5 backdrop-blur-sm">
           <div className="flex items-center gap-2 text-white/70 text-sm font-medium">
             <Users className="w-4 h-4" />
@@ -68,7 +70,7 @@ export default function Header({
 
         <div className="bg-white/95 text-gray-700 rounded-2xl p-5">
           <div className="flex items-center gap-2 text-gray-500 text-sm font-medium">
-            <Wallet className="w-4 h-4" />
+            <Receipt className="w-4 h-4" />
             Total Outstanding
           </div>
           <p
@@ -79,6 +81,19 @@ export default function Header({
             {formatCurrency(totalOutstanding)}
           </p>
         </div>
+
+        <button
+          onClick={() => router.push("/wallet")}
+          className="bg-white/95 text-gray-700 rounded-2xl p-5 text-left hover:bg-white transition-colors"
+        >
+          <div className="flex items-center gap-2 text-gray-500 text-sm font-medium">
+            <Wallet className="w-4 h-4" />
+            Wallet Balance
+          </div>
+          <p className="text-2xl font-bold mt-2 text-purple-700">
+            {formatCurrency(walletBalance ?? 0)}
+          </p>
+        </button>
 
         <div className="bg-white/95 text-gray-700 rounded-2xl p-5">
           <div className="flex items-center gap-2 text-gray-500 text-sm font-medium">

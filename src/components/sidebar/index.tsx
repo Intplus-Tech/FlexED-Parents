@@ -12,6 +12,7 @@ import {
   PaymentIcon,
   SettingsIcon,
 } from "@/icons";
+import { Wallet } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/slice/auth";
 import {
@@ -26,6 +27,7 @@ interface PortalSidebarProps {
 const navItems = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: HomeIcon },
   { id: "pay-fees", label: "Pay Fees", href: "/pay-fees", icon: PaymentIcon },
+  { id: "wallet", label: "Wallet", href: "/wallet", icon: Wallet },
 ];
 
 export default function PortalSidebar({ onClose }: PortalSidebarProps) {

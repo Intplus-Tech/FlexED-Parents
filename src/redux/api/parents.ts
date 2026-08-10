@@ -37,6 +37,7 @@ const parentsApi = apiSlice.injectEndpoints({
       query: () => ({
         url: ApiEndpoints.parent.parentDashbaord,
       }),
+      providesTags: ["ParentDashboard"],
     }),
     getTransactionStatus: builder.query<
       ParentTransactionsResponse,
